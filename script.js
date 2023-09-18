@@ -1,5 +1,7 @@
 const apiEP = 'https://randomuser.me/api/?results=20';
 
+const countElm = document.getElementById('count');
+
 let userList = [];
 
 const listElm = document.getElementById('list');
@@ -47,11 +49,38 @@ const display = (users) => {
         <ul class="list-unstyled">
           <li><i class="fa-solid fa-mobile"></i> ${item.phone}</li>
           <li><i class="fa-solid fa-envelope"></i> ${item.email}</li>
-          <li><i class="fa-solid fa-map-location"></i> ${item?.location}</li>
+          <li><i class="fa-solid fa-map-location"></i> ${item?.location?.city} ${item?.location?.country} 
+          </li>
         </ul>
       </div>
     </div>
   </div>`;
   });
   listElm.innerHTML = str;
+  countElm.innerText = users.length;
 };
+
+const handleOnGenderSelect = (e) => {
+  const g = e.value;
+
+  const url = `${apiEP}&gender=${g}`;
+  fetchUser(url);
+};
+
+// const func = (e) => {
+//   const { value } = e.target;
+//   console.log(e.value)
+// };
+
+document.getElementById('search').addEventListener('keyup', (e) => {
+  const { value } = e.target;
+
+  const filteredArg = userList.filter((usr) => {
+    const fullName = `${usr.name.first} ${usr.name.last}`.toLowerCase();
+
+    if (fullName.includes(value.toLowerCase())) {
+      return true;
+    }
+  });
+  display(filteredArg);
+});
